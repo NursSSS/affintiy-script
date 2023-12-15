@@ -1,0 +1,28 @@
+European Venture Capital, Backing Global Winners
+
+Dear {{ customer_name }}
+
+Thank you again for your trust and support. We will work hard to make sure you made the right decision to join {{ merchant_name }}.
+
+We are pleased to be able to provide you access to {{ merchant_name }} Investor Portal where you can view information on the performance of your investments.
+
+The portal is fast becoming an integral tool to ensure secure and efficient communication to our Investors, however, please note that there may be limited information available to you immediately after your first investment with {{ merchant_name }} as data is updated on a monthly basis.
+
+What our Investor Portal is intended to be used for:
+ - Tracking information on the performance of your investments.
+ - One stop solution for all the documents executed with {{ merchant_name }}.
+ - Storage of all notices, fund and co-investments reporting.
+
+We would like to one more time thank you for your trust and support and suggest you follow the below link to access the Investor Portal. Please sign up with your email and create a secure password.
+
+{{ invitation_url }}
+
+Please feel free to reach out to our Investor Relations Team at ir@targetglobal.vc if you have any questions.
+
+Your {{ merchant_name }} Team
+
+Facebook https://www.facebook.com/TargetGlobalVC/
+Twitter  https://twitter.com/TargetGlobalVC
+LinkedIn https://www.linkedin.com/company/target-global/
+
+Target Global: https://www.targetglobal.vc/

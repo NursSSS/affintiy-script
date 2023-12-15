@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="EN">
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Invitation To The Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style type="text/css">
+    /**
+     * Avoid browser level font resizing.
+     * 1. Windows Mobile
+     * 2. iOS / OSX
+     */
+    body,
+    table,
+    td,
+    a {
+      -ms-text-size-adjust: 100%; /* 1 */
+      -webkit-text-size-adjust: 100%; /* 2 */
+    }
+
+    /**
+     * Remove extra space added to tables and cells in Outlook.
+     */
+    table,
+    td {
+      mso-table-rspace: 0;
+      mso-table-lspace: 0;
+    }
+
+    /**
+     * Better fluid images in Internet Explorer.
+     */
+    img {
+      -ms-interpolation-mode: bicubic;
+    }
+
+    /**
+     * Remove blue links for iOS devices.
+     */
+    a[x-apple-data-detectors] {
+      font-family: inherit !important;
+      font-size: inherit !important;
+      font-weight: inherit !important;
+      line-height: inherit !important;
+      color: inherit !important;
+      text-decoration: none !important;
+    }
+
+    /**
+     * Fix centering issues in Android 4.4.
+     */
+    div[style*="margin: 16px 0;"] {
+      margin: 0 !important;
+    }
+
+    body {
+      width: 100% !important;
+      height: 100% !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    /**
+     * Collapse table borders to avoid space between cells.
+     */
+    table {
+      border-collapse: collapse !important;
+    }
+
+    a {
+      color: #1a82e2;
+    }
+
+    img {
+      height: auto;
+      line-height: 100%;
+      text-decoration: none;
+      border: 0;
+      outline: none;
+    }
+    .container{
+      background:#f2f3f7;
+      background-color:#f2f3f7;
+    }
+    .cont_box{
+      margin:0px auto;
+      border-radius:0;
+      max-width:600px
+    }
+    .container_table{
+      width:100%;
+      max-width:600px;
+      border-radius:0;
+    }
+    .fs_td{
+      border-bottom:0 none #000;
+      border-left:0 none #000;
+      border-right:0 none #000;
+      border-top:0 none #000;
+      direction:ltr;
+      font-size:0px;
+      padding:0 32px;
+      text-align:center;
+    }
+    .fs_td_div{
+      font-size:0px;
+      text-align:left;
+      direction:ltr;
+      display:inline-block;
+      vertical-align:top;width:100%
+    }
+    .sc_td{
+      background-color:transparent;
+      border-bottom:none;
+      border-left:none;
+      border-right:none;
+      border-top:none;
+      vertical-align:top;
+      padding:0;
+      padding-top: 16px;
+    }
+    .tr_td{
+      border-radius: 16px;
+      background:#ffffff;
+      font-size:0px;
+      word-break:break-word;
+    }
+    .text_div{
+      font-family:Ubuntu,Helvetica,Arial,sans-serif;
+      font-size:13px;
+      line-height:1.4;
+      text-align:left;
+      color:#000000;
+    }
+    .logo{
+      text-align:center;
+    }
+    .logo_img{
+      padding-top:31px;
+    }
+    .logo_img div{
+      width:144px;
+      max-width:144px;
+      height:auto;
+    }
+    .logo_title{
+      color: #6B6D7E;
+      font-size: 12px;
+      line-height: 20px;
+      font-style: normal;
+      font-weight: normal;
+      margin-bottom: 0;
+      margin-top: 10px;
+    }
+    .logo_team{
+      background-color: white; 
+      margin-top: 24px;
+      padding-left: 38px;
+      padding-right: 38px;
+    }
+    .logo_team img{
+      width:100%;
+      max-width:600px;
+      height:auto;
+    }
+    .text_div{
+      text-align:left;
+    }
+    .text_dear{
+      text-align: left;
+      padding-top: 5px;
+      margin-left: 38px;
+      margin-right: 38px;
+    }
+    .text_dear p{
+      font-family: Arial,serif;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 24px;
+      line-height: 32px;
+      align-items: center;
+      color: #0E102F;
+      word-break: break-word;
+    }
+    .text_body{
+      text-align: left; 
+      margin-bottom: 0px;
+      margin-left: 38px;
+      margin-right: 38px;
+    }
+    .text {
+      font-family: Arial,serif;
+      font-style: normal;
+      font-weight: normal;
+    }
+    .text_p{
+      font-size: 17px;
+      line-height: 28px;
+      color: #41424E;
+    }
+    .text_s_p{
+      margin-top:23px;
+    }
+    .css_text{
+      font-size: 16px;
+      line-height: 24px;
+      color: #6B6D7E;
+    }
+    .inv_div{
+      text-align:center;
+      margin-top: 31px;
+      margin-bottom: 31px;
+    }
+    .inv_div table{
+      border: 0;
+    }
+    .inv_div td{
+      border-radius: 4px; 
+      background-color: #2A3089;
+      text-align: center;
+    }
+    .inv_div a{
+      text-decoration: none;
+      font-family: Arial,serif;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 24px;
+      color: #FFFFFF;
+      border-radius: 4px; 
+      padding: 11px 23px; 
+      border: 1px solid #2A3089; 
+      display: inline-block;
+      width: 220px;
+    }
+    .target{
+      color: #03853c !important; 
+      text-decoration: none;
+    }
+    .target_team{
+      text-align: left; 
+      background-color: white;
+      border-radius: 16px;
+    }
+    .target_team table{
+      border: 0;
+      width: 100%;
+    }
+    .tt_td{
+      padding-left: 32px; 
+      padding-right: 32px;
+      padding-top: 32px;
+    }
+    .tt_td div{
+      margin-bottom: 23px;
+      border-top: 1px solid #E0E2EA; 
+      padding-top: 23px;
+    }
+    .tt_td table{
+      border: 0;
+      width: 100%;
+    }
+    .tt_td p{
+      display: block;
+      margin: 0;
+    }
+    .links{
+      padding-bottom: 25px;
+    }
+    .links_t{
+      margin-bottom: 25px;
+    }
+    .links_div{
+      margin-top: 20px;
+      margin-right: 70px;
+      margin-bottom: 0;
+      margin-left: 70px;
+      width: 100%;
+    }
+    .social{
+      text-decoration: none; 
+      margin-right: 25px;
+    }
+    .facebook{
+      width: 10px; 
+      height: 20px;
+    }
+    .twitter{
+      width: 20px; 
+      height: 16px
+    }
+    .linkedin{
+      width: 18px; 
+      height: 18px;
+    }
+    .tar_glo{
+      float: left;
+      padding-top:2px;
+      width: 50%
+    }
+    .l_span{
+      font-size: 13px;
+      line-height: 20px;
+      color: #6B6D7E;
+    }
+    .l_a{
+      font-family: Arial,serif;
+      color: #03853c !important; 
+      text-decoration: none;
+      font-size: 13px;
+      line-height: 20px;
+    }
+    .footer{
+      float: left;
+      width: 50%;
+    }
+
+    @media screen and (max-width:614px) {
+      .footer-media {
+        float: none;
+        width: 100%!important;
+      }
+      .footer-site {
+        float: none;
+        width: 100%!important;
+        margin-top: 21px;
+      }
+    }
+  </style>
+</head>
+
+  <body>
+    <div class="container cont_box">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" class="container container_table">
+        <tbody>
+          <tr>
+            <td class="fs_td">
+              <div class="fs_td_div">
+
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td class="sc_td">
+
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                          <tbody>
+                            <tr>
+                              <td align="left" class="tr_td">
+                                <div class="text_div">
+                                  <div class="logo">
+                                    <div class="logo_img">
+                                      <img src="{{ logo_image }}" width="144" alt="Logo">
+                                    </div>
+                                    <p class="logo_title">
+                                      European Venture Capital, Backing Global Winners
+                                    </p>
+                                    <div class="logo_team">
+                                      <img src="cid:{{ main_image }}" width="514" alt="Team">
+                                    </div>
+                                  </div>
+
+                                  <div class="text_div">
+                                    <div class="text_dear">
+                                      <p>
+                                        Dear {{ customer_name }}
+                                      </p>
+                                    </div>
+
+                                    <div class="text_body">
+                                      <p class="text text_p">
+                                        Thank you again for your trust and support. We will work hard to make sure you made the right decision to join {{ merchant_name }}.
+                                      </p>
+                                      <p class="text text_p">
+                                        We are pleased to be able to provide you access to {{ merchant_name }} Investor Portal where you can view information on the performance of your investments.
+                                      </p>
+
+                                      <p class="text css_text text_s_p">
+                                        The portal is fast becoming an integral tool to ensure secure and efficient communication to our Investors, however, please note that there may be limited information available to you immediately after your first investment with {{ merchant_name }} as data is updated on a monthly basis.
+                                      </p>
+                                      <p class="text css_text">
+                                        What our Investor Portal is intended to be used for:
+                                      </p>
+                                      <ul>
+                                        <li class="text css_text">Tracking information on the performance of your investments.</li>
+                                        <li class="text css_text">One stop solution for all the documents executed with {{ merchant_name }}.</li>
+                                        <li class="text css_text">Storage of all notices, fund and co-investments reporting.</li>
+                                      </ul>
+
+                                      <p class="text css_text">
+                                        We would like to one more time thank you for your trust and support and suggest you follow the below link to access the Investor Portal. Please sign up with your email and create a secure password.
+                                      </p>
+
+                                      <div class="inv_div">
+                                        <table cellspacing="0" cellpadding="0" align="center">
+                                          <tr>
+                                            <td align="center">
+                                              <a target="_blank" href="{{ invitation_url }}">Go to the portal</a>
+                                            </td>
+                                          </tr>
+                                        </table>
+                                      </div>
+
+                                      <p class="text css_text">
+                                        Please feel free to reach out to our Investor Relations Team at
+                                        <a href="mailto:ir@targetglobal.vc" class="target">ir@targetglobal.vc</a>
+                                        if you have any questions.
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div class="target_team">
+                                    <table cellspacing="0" cellpadding="0">
+                                      <tbody>
+                                        <tr>
+                                          <td class="tt_td">
+                                            <div>
+                                              <table cellspacing="0" cellpadding="0">
+                                                <tbody>
+                                                  <tr>
+                                                    <td>
+                                                      <p class="text css_text">Your {{ merchant_name }} Team</p>
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="container cont_box links">
+                <table>
+                  <tbody>
+                    <tr>
+                      <td class="links_t">
+                        <div class="links_div">
+                          <div class="footer footer-media">
+                            <a href="https://www.facebook.com/TargetGlobalVC/" class="social">
+                              <img src="cid:{{ facebook_image }}" class="facebook" alt="Facebook">
+                            </a>
+                            <a href="https://twitter.com/TargetGlobalVC" class="social">
+                              <img src="cid:{{ twitter_image }}" class="twitter" alt="Twitter">
+                            </a>
+                            <a href="https://www.linkedin.com/company/target-global/">
+                              <img src="cid:{{ linkedin_image }}" class="linkedin" alt="Linkedin">
+                            </a>
+                          </div>
+
+                          <div class="footer-site tar_glo">
+                            <span class="text l_span">Target Global: </span>
+                            <a class="l_a" href="https://www.targetglobal.vc/">www.targetglobal.vc</a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
