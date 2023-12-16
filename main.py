@@ -8,17 +8,17 @@ import urllib.parse
 from dotenv import dotenv_values
 from jinja2 import Environment, FileSystemLoader
 import yagmail
-from typing import Dict
+from email.mime.image import MIMEImage
 
 config = dotenv_values(".env")
 logger = logging.getLogger(__name__)
 
 images = {
-            'main_image': 'email/images/Team.png',
-            'facebook_image': 'email/images/Facebook.png',
-            'linkedin_image': 'email/images/Linkedin.png',
-            'twitter_image': 'email/images/Twitter.png',
-        }
+    'main_image': 'email/images/Team.png',
+    'facebook_image': 'email/images/Facebook.png',
+    'linkedin_image': 'email/images/Linkedin.png',
+    'twitter_image': 'email/images/Twitter.png',
+}
 html_template_dir = 'email'
 html_template_filename = "user_invitation_mail_from_merchant.html"
 plain_text_template_filename = "user_invitation_mail_from_merchant.txt"
@@ -40,14 +40,14 @@ response = """
       {
         "customer_id": "CID00099",
         "reporting_email": null,
-        "capital_call": "test123@example.com",
-        "kyc_email": "test645@example.com"
+        "capital_call": "oneflyer04@example.com",
+        "kyc_email": "nurik2kun@example.com"
       },
       {
         "customer_id": "CID00099",
-        "reporting_email": "test78@example.com,test12345@example.com",
+        "reporting_email": "nurik11kun@example.com,test12345@example.com",
         "capital_call": null,
-        "kyc_email": "test909@example.com"
+        "kyc_email": "moonshine17691769@example.com"
       },
       {
         "customer_id": null,
@@ -119,10 +119,11 @@ for investor in investors:
                     is_signatory_person, is_primary_account, role, status, email_role, creation_date) 
                 VALUES (%s, %s, %s, false, false, 'view', 1, 'report_email', CURRENT_TIMESTAMP)
                 RETURNING *;
-            """, (email, customer_master_id, UID),)
+            """, (email, customer_master_id, UID))
         except Exception as e:
-            print("Error:", e)
+            logger.log(logging.INFO, e)
             connection.rollback()
+            continue
 
         user = cursor.fetchone()
         print(user)
@@ -143,10 +144,15 @@ for investor in investors:
         token = binascii.hexlify(
             os.urandom(64)
         ).decode()[0:64]
+
+        # Create invitation token
         cursor.execute("""
             INSERT INTO "CUSTOMER"."CUSTOMER_INVITATION_TOKEN" (created_at, token, user_id, notification)
             VALUES (CURRENT_TIMESTAMP, %s, %s, false);
         """, (token, user['customer_user_id']))
+
+        # Commit db operations
+        connection.commit()
 
         # Find merchant
         cursor.execute("""SELECT *
@@ -180,48 +186,32 @@ for investor in investors:
         email_plaintext_message = template.render(context)
 
         to_email = config.get('PORTAL_SENDER_EMAIL') if config.get('EMAIL_TEST_MODE') else user.email
-        email_data = {
-                'email_host': config.get("EMAIL_HOST"),
-                'email_host_port': config.get("EMAIL_PORT"),
-                'from_email': config.get("PORTAL_SENDER_EMAIL"),
-                'email_username': config.get("EMAIL_HOST_USER"),
-                'email_user_pwd': config.get("EMAIL_HOST_PASSWORD")
-        }
 
         # Set up yagmail SMTP client
-        yag = yagmail.SMTP(email_data['email_host'], email_data['email_user_pwd'])
+        yag = yagmail.SMTP(config.get("EMAIL_HOST_USER"), config.get("EMAIL_HOST_PASSWORD"))
 
-        # Compose your email
-        email_contents = {'subject': email_plaintext_message, 'contents': template}
+        # Add attachments
+        attachments = []
         if images:
             for placeholder, path in images.items():
-                email_contents[path] = f'cid: {placeholder}'
+                with open(f'./{path}', 'rb') as f:
+                    image_data = f.read()
+                image = MIMEImage(image_data)
+                image.add_header('Content-ID', f'<{placeholder}>')
+                attachments.append(image)
+
+        # Compose email
+        email_contents = {
+            'subject': email_plaintext_message,
+            'contents': template,
+            'attachments': attachments
+        }
 
         # Send the email
         yag.send(to=to_email, **email_contents)
 
         # Close the SMTP client
         yag.close()
-    #
-    #
-    # def __attach_images_to_email_message(images: Dict[str, str], msg: EmailMultiAlternatives):
-    #     for placeholder, path in images.items():
-    #         with open(f'./static_templates/{path}', 'rb') as f:
-    #             image_data = f.read()
-    #         image = MIMEImage(image_data)
-    #         image.add_header('Content-ID', f'<{placeholder}>')
-    #         msg.attach(image)
-        # send_email_to_investor(
-        #     InvestorEmailContext(
-        #         to_email=invitation_token.user.email,
-        #         subject="Invitation To The Portal",
-        #         html_template_path=html_template_path,
-        #         plain_text_template_path=plain_text_template_path,
-        #         template_context=context,
-        #         images=images
-        #     )
-        # )
-        connection.commit()
 
 cursor.close()
 connection.close()
