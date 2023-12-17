@@ -40,14 +40,14 @@ response = """
       {
         "customer_id": "CID00099",
         "reporting_email": null,
-        "capital_call": "oneflyer04@example.com",
-        "kyc_email": "nurik2kun@example.com"
+        "capital_call": "oneflyer04@gmail.com",
+        "kyc_email": "nurik2kun@gmail.com"
       },
       {
         "customer_id": "CID00099",
-        "reporting_email": "nurik11kun@example.com,test12345@example.com",
+        "reporting_email": "nurik11kun@gmail.com,nurik4kun@gmail.com",
         "capital_call": null,
-        "kyc_email": "moonshine17691769@example.com"
+        "kyc_email": "moonshine17691769@gmail.com"
       },
       {
         "customer_id": null,
@@ -71,13 +71,6 @@ connection = psycopg2.connect(
 
 cursor = connection.cursor()
 
-cursor.execute("""SELECT customer_user_id
-        FROM "CUSTOMER"."CUSTOMER_USER"
-        ORDER BY id DESC
-        LIMIT 1;
-    """)
-customer_user_id = cursor.fetchone()
-UID = customer_user_id[0]
 email_fields = ['reporting_email', 'capital_call', 'kyc_email']
 
 for investor in investors:
@@ -100,17 +93,12 @@ for investor in investors:
         # Check investor for existing
         cursor.execute("""
             SELECT * FROM "CUSTOMER"."CUSTOMER_USER"
-            WHERE customer_user_id = %s AND email IN %s
-        """, (customer_master_id, email_addresses))
+            WHERE customer_id = %s AND email = %s
+        """, (customer_master_id, email))
         result = cursor.fetchone()
 
         if result is not None:
             continue
-
-        # Increment customer_user_id
-        numeric_part = int(UID[3:])
-        numeric_part += 1
-        UID = f"UID{numeric_part}"
 
         # Create investor
         try:
@@ -119,16 +107,20 @@ for investor in investors:
                     is_signatory_person, is_primary_account, role, status, email_role, creation_date) 
                 VALUES (%s, %s, %s, false, false, 'view', 1, 'report_email', CURRENT_TIMESTAMP)
                 RETURNING *;
-            """, (email, customer_master_id, UID))
+            """, (email, customer_master_id, ''))
         except Exception as e:
             logger.log(logging.INFO, e)
             connection.rollback()
             continue
 
-        user = cursor.fetchone()
-        print(user)
+        cursor.execute("""
+            SELECT * FROM "CUSTOMER"."CUSTOMER_USER"
+            WHERE email = %s
+        """, (email,))
 
-        if user is None:
+        customer_user_id = cursor.fetchone()[0]
+
+        if customer_user_id is None:
             logger.log(logging.INFO, f"Error with creating investor with email {email}")
             continue
 
@@ -136,9 +128,9 @@ for investor in investors:
 
         # Create UserLog
         cursor.execute("""
-                INSERT INTO "temp.users_logs" (customer_user_id, log_id)
-                VALUES ((%s), (SELECT "log_id" FROM "temp.users_logs" WHERE "log_id" = USER_INVITED_TO_SIGNUP));
-            """, (user['customer_user_id']))
+                INSERT INTO temp.users_logs (customer_user_id, log_id, creation_date)
+                VALUES (%s, 'E00', CURRENT_TIMESTAMP);
+            """, (customer_user_id,))
 
         # Generate invitation token
         token = binascii.hexlify(
@@ -149,29 +141,43 @@ for investor in investors:
         cursor.execute("""
             INSERT INTO "CUSTOMER"."CUSTOMER_INVITATION_TOKEN" (created_at, token, user_id, notification)
             VALUES (CURRENT_TIMESTAMP, %s, %s, false);
-        """, (token, user['customer_user_id']))
+        """, (token, customer_user_id))
 
         # Commit db operations
-        connection.commit()
+        # connection.commit()
 
         # Find merchant
-        cursor.execute("""SELECT *
-                FROM "CUSTOMER"."CUSTOMER_MASTER"
-                WHERE customer_master_id = %s
-            """, (customer_master_id,))
-        merchant = cursor.fetchone()
+        cursor.execute("""
+            SELECT cm.customer_name, m.merchant_logo_with_name, m.merchant_display_name, m.merchant_is_additional
+            FROM "CUSTOMER"."CUSTOMER_MASTER" cm
+            JOIN merchant.merchant_master m ON cm.merchant_master_id = m.merchant_id
+            WHERE cm.customer_id = %s;
+        """, (customer_master_id,))
+
+        customer_master_data = cursor.fetchone()
+
+        if customer_master_data is None:
+            logger.log(logging.INFO, "Customer master is not found")
+            continue
+
+        merchant = {
+            'customer_name': customer_master_data[0],
+            'merchant_logo_with_name': customer_master_data[1],
+            'merchant_display_name': customer_master_data[2],
+            'merchant_is_additional': customer_master_data[3]
+        }
 
         # We parse the logo url
-        encoded_logo = urllib.parse.quote_plus(merchant.merchant_logo_with_name) if isinstance(
-            merchant.merchant_logo_with_name, str) else None
+        encoded_logo = urllib.parse.quote_plus(merchant['merchant_logo_with_name']) if isinstance(
+            merchant['merchant_logo_with_name'], str) else None
 
         # Generate context
         context = {
-            'customer_name': merchant.customer_name,
-            'invitation_url': f"{config.get("APP_HOST")}investor/invites/{token}/{user.email}/{encoded_logo}",
-            'logo_image': merchant.merchant_logo_with_name,
-            'merchant_name': merchant.merchant_display_name,
-            'is_alternative_email': merchant.merchant_is_additional
+            'customer_name': merchant['customer_name'],
+            'invitation_url': f"{config.get("APP_HOST")}investor/invites/{token}/{email}/{encoded_logo}",
+            'logo_image': merchant['merchant_logo_with_name'],
+            'merchant_name': merchant['merchant_display_name'],
+            'is_alternative_email': merchant['merchant_is_additional']
         }
         context.update({k: k for k, v in images.items()})
 
@@ -185,7 +191,7 @@ for investor in investors:
         template = env.get_template(plain_text_template_filename)
         email_plaintext_message = template.render(context)
 
-        to_email = config.get('PORTAL_SENDER_EMAIL') if config.get('EMAIL_TEST_MODE') else user.email
+        to_email = config.get('PORTAL_SENDER_EMAIL') if config.get('EMAIL_TEST_MODE') else email
 
         # Set up yagmail SMTP client
         yag = yagmail.SMTP(config.get("EMAIL_HOST_USER"), config.get("EMAIL_HOST_PASSWORD"))
@@ -202,9 +208,9 @@ for investor in investors:
 
         # Compose email
         email_contents = {
-            'subject': email_plaintext_message,
-            'contents': template,
-            'attachments': attachments
+            'subject': 'Test subject',
+            'contents': email_html_message,
+            # 'attachments': attachments
         }
 
         # Send the email
