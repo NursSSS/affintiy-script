@@ -182,6 +182,7 @@ for investor in investors:
         context.update({k: k for k, v in images.items()})
 
         # Render email html message
+        # Fix: Неправильно рендерит сабжект, выкидывает Error
         env = Environment(loader=FileSystemLoader(html_template_dir))
         template = env.get_template(html_template_filename)
         email_html_message = template.render(context)
@@ -191,26 +192,33 @@ for investor in investors:
         template = env.get_template(plain_text_template_filename)
         email_plaintext_message = template.render(context)
 
-        to_email = config.get('PORTAL_SENDER_EMAIL') if config.get('EMAIL_TEST_MODE') else email
+        to_email = None
+        if config.get("EMAIL_TEST_MODE") == "True":
+            to_email = config.get("PORTAL_SENDER_EMAIL")
+        else:
+            to_email = email
+        print(to_email, email, config.get("EMAIL_TEST_MODE"))
 
         # Set up yagmail SMTP client
         yag = yagmail.SMTP(config.get("EMAIL_HOST_USER"), config.get("EMAIL_HOST_PASSWORD"))
 
         # Add attachments
         attachments = []
-        if images:
-            for placeholder, path in images.items():
-                with open(f'./{path}', 'rb') as f:
-                    image_data = f.read()
-                image = MIMEImage(image_data)
-                image.add_header('Content-ID', f'<{placeholder}>')
-                attachments.append(image)
+
+        # Просто прикрепляет, но надо чтобы внедрял в контекст
+        # if images:
+        #     for placeholder, path in images.items():
+        #         with open(f'./{path}', 'rb') as f:
+        #             image_data = f.read()
+        #         image = MIMEImage(image_data)
+        #         image.add_header('Content-ID', f'<{placeholder}>')
+        #         attachments.append(image)
 
         # Compose email
         email_contents = {
             'subject': 'Test subject',
             'contents': email_html_message,
-            # 'attachments': attachments
+            'attachments': attachments
         }
 
         # Send the email
